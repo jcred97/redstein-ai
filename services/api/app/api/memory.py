@@ -1,0 +1,67 @@
+from fastapi import APIRouter
+from pydantic import BaseModel
+
+from app.db.session import get_connection
+
+router = APIRouter(prefix="/api/memory", tags=["memory"])
+
+
+class MemoryCreate(BaseModel):
+    title: str
+    content: str
+
+
+@router.get("")
+def list_memory():
+    with get_connection() as connection:
+        rows = connection.execute(
+            """
+            SELECT id, title, content, created_at
+            FROM memories
+            ORDER BY created_at DESC
+            """
+        ).fetchall()
+
+    return [dict(row) for row in rows]
+
+
+@router.post("")
+def create_memory(memory: MemoryCreate):
+    with get_connection() as connection:
+        cursor = connection.execute(
+            """
+            INSERT INTO memories (title, content)
+            VALUES (?, ?)
+            """,
+            (memory.title, memory.content),
+        )
+        connection.commit()
+
+        row = connection.execute(
+            """
+            SELECT id, title, content, created_at
+            FROM memories
+            WHERE id = ?
+            """,
+            (cursor.lastrowid,),
+        ).fetchone()
+
+    return dict(row)
+
+
+@router.delete("/{memory_id}")
+def delete_memory(memory_id: int):
+    with get_connection() as connection:
+        cursor = connection.execute(
+            """
+            DELETE FROM memories
+            WHERE id = ?
+            """,
+            (memory_id,),
+        )
+        connection.commit()
+
+    if cursor.rowcount == 0:
+        return {"ok": False, "message": "Memory not found"}
+
+    return {"ok": True}

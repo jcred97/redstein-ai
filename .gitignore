@@ -1,0 +1,32 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+
+# Local data
+data/sqlite/*.db
+data/sqlite/*.db-*
+data/chroma/
+data/notes/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+build/
+coverage/
+*.tsbuildinfo
+
+# Logs
+*.log
+.logs/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
