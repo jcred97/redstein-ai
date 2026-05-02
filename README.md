@@ -63,6 +63,19 @@ Open:
 http://localhost:3000
 ```
 
+## Local Data
+
+Redstein AI stores local memory in SQLite:
+
+```text
+data/sqlite/redstein.db
+```
+
+This file is created automatically when the FastAPI backend starts. It is
+ignored by Git because it may contain personal user data.
+
+Each developer or user gets their own local database.
+
 ## Useful Checks
 
 Backend health:
