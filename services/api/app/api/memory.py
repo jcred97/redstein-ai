@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 from app.db.session import get_connection
 
+# All routes in this file are mounted under /api/memory.
 router = APIRouter(prefix="/api/memory", tags=["memory"])
 
 
@@ -28,6 +29,7 @@ def list_memory():
 @router.post("")
 def create_memory(memory: MemoryCreate):
     with get_connection() as connection:
+        # Use SQL placeholders so user-provided memory text is passed safely.
         cursor = connection.execute(
             """
             INSERT INTO memories (title, content)
@@ -37,6 +39,7 @@ def create_memory(memory: MemoryCreate):
         )
         connection.commit()
 
+        # Return the created row so callers get the generated id and timestamp.
         row = connection.execute(
             """
             SELECT id, title, content, created_at
@@ -61,6 +64,7 @@ def delete_memory(memory_id: int):
         )
         connection.commit()
 
+    # rowcount is 0 when the requested memory id did not exist.
     if cursor.rowcount == 0:
         return {"ok": False, "message": "Memory not found"}
 

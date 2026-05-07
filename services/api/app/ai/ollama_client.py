@@ -1,9 +1,8 @@
 import httpx
 
+from app.core.config import OLLAMA_BASE_URL, OLLAMA_MODEL
 
-OLLAMA_BASE_URL = "http://localhost:11434"
-OLLAMA_MODEL = "llama3.1"
-
+# System instructions shape the local model into Redstein AI.
 SYSTEM_PROMPT = """
 You are Redstein AI, a local-first personal AI assistant running on the user's PC.
 
@@ -26,6 +25,7 @@ async def ask_ollama(
     memories: list[dict],
     history: list[dict],
 ) -> str:
+    # Convert structured memories into text the model can read.
     memory_context = "\n".join(
         f"- {memory['title']}: {memory['content']}" for memory in memories
     )
@@ -36,10 +36,12 @@ Saved memories:
 {memory_context if memory_context else "- No saved memories yet."}
 """.strip()
 
+    # Ollama chat expects role-based messages: system, previous turns, latest user.
     messages = [{"role": "system", "content": system_content}]
     messages.extend(history)
     messages.append({"role": "user", "content": message})
 
+    # Call Ollama's local HTTP API and wait for a complete response.
     async with httpx.AsyncClient(timeout=60) as client:
         response = await client.post(
             f"{OLLAMA_BASE_URL}/api/chat",
