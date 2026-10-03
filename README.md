@@ -1,7 +1,8 @@
 # Redstein AI
 
-Local-first personal AI assistant MVP powered by Next.js, FastAPI, SQLite,
-Ollama, and `llama3.1`.
+Redstein AI is a local-first personal AI assistant, growing toward a second brain
+for capturing and recalling useful knowledge. The current MVP provides chat and
+saved memories using Next.js, FastAPI, SQLite, Ollama, and `llama3.1`.
 
 ## Current Features
 
@@ -11,6 +12,17 @@ Ollama, and `llama3.1`.
 - Redstein AI identity prompt
 - SQLite-backed memory storage
 - Memory save, list, delete, and memory-aware replies
+- SQLite-backed conversation history and recent conversation context
+
+## Planned Next Steps
+
+These features are planned and are not part of the current MVP:
+
+1. Keyword search and editing for saved memories.
+2. Chat answers that retrieve relevant saved entries and show their sources.
+3. Richer notes, Markdown/Obsidian support, and semantic search.
+
+Development stays incremental, with personal data stored locally by default.
 
 ## Requirements
 
